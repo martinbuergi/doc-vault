@@ -1,0 +1,62 @@
+# DocVault - Cloudflare Workers Configuration
+name = "docvault-api"
+main = "workers/api/index.ts"
+compatibility_date = "2024-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Account ID will be set via environment or wrangler login
+# account_id = ""
+
+[build]
+command = "npm run build:workers"
+
+# Development settings
+[dev]
+port = 8787
+local_protocol = "http"
+
+# Production environment
+[env.production]
+name = "docvault-api-prod"
+
+# D1 Database binding
+[[d1_databases]]
+binding = "DB"
+database_name = "docvault-db"
+database_id = "" # Will be populated after creation
+
+# R2 Bucket binding for file storage
+[[r2_buckets]]
+binding = "FILES"
+bucket_name = "docvault-files"
+
+# Vectorize index binding for embeddings
+[[vectorize]]
+binding = "VECTORS"
+index_name = "docvault-embeddings"
+
+# AI Gateway binding
+[ai]
+binding = "AI"
+
+# Queue for async document processing
+[[queues.producers]]
+queue = "docvault-processing"
+binding = "PROCESSING_QUEUE"
+
+[[queues.consumers]]
+queue = "docvault-processing"
+max_batch_size = 10
+max_batch_timeout = 30
+
+# Environment variables (secrets should be set via wrangler secret)
+[vars]
+ENVIRONMENT = "development"
+API_VERSION = "v1"
+CORS_ORIGIN = "*"
+
+# Rate limiting
+# [unsafe.bindings]
+# [[unsafe.bindings]]
+# name = "RATE_LIMITER"
+# type = "ratelimit"

@@ -1,0 +1,506 @@
+openapi: 3.1.0
+info:
+  title: DocVault API
+  description: |
+    DocVault is an intelligent document management platform.
+    Upload, vectorize, auto-tag, search, and converse with your documents.
+  version: 1.0.0
+  contact:
+    name: DocVault Support
+
+servers:
+  - url: https://docvault-api.workers.dev/api/v1
+    description: Production
+  - url: http://localhost:8787/api/v1
+    description: Local Development
+
+security:
+  - bearerAuth: []
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token or API key
+
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
+
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        display_name:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+
+    Document:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        workspace_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        mime_type:
+          type: string
+        file_size_bytes:
+          type: integer
+        status:
+          type: string
+          enum: [pending, processing, ready, error]
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+        created_at:
+          type: string
+          format: date-time
+
+    Tag:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        category:
+          type: string
+        usage_count:
+          type: integer
+
+    ChatMessage:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        role:
+          type: string
+          enum: [user, assistant]
+        content:
+          type: string
+        sources:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChatSource'
+        created_at:
+          type: string
+          format: date-time
+
+    ChatSource:
+      type: object
+      properties:
+        document_id:
+          type: string
+          format: uuid
+        document_title:
+          type: string
+        text_snippet:
+          type: string
+        relevance_score:
+          type: number
+
+    ApiKey:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        prefix:
+          type: string
+        role:
+          type: string
+          enum: [owner, editor, viewer]
+        last_used_at:
+          type: string
+          format: date-time
+        expires_at:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+
+paths:
+  /auth/register:
+    post:
+      summary: Register a new user
+      tags: [Authentication]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  minLength: 8
+                display_name:
+                  type: string
+              required:
+                - email
+                - password
+      responses:
+        '201':
+          description: Registration successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  user:
+                    $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Email already registered
+
+  /auth/login:
+    post:
+      summary: Login
+      tags: [Authentication]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+              required:
+                - email
+                - password
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  user:
+                    $ref: '#/components/schemas/User'
+        '401':
+          description: Invalid credentials
+
+  /auth/keys:
+    get:
+      summary: List API keys
+      tags: [Authentication]
+      responses:
+        '200':
+          description: List of API keys
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  keys:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ApiKey'
+    post:
+      summary: Create API key
+      tags: [Authentication]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                workspace_id:
+                  type: string
+                  format: uuid
+                role:
+                  type: string
+                  enum: [editor, viewer]
+                expires_in_days:
+                  type: integer
+              required:
+                - name
+                - workspace_id
+      responses:
+        '201':
+          description: API key created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  key:
+                    type: string
+                    description: Full API key (shown only once)
+                  name:
+                    type: string
+                  prefix:
+                    type: string
+
+  /documents/upload:
+    post:
+      summary: Upload documents
+      tags: [Documents]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                files:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+      responses:
+        '201':
+          description: Documents uploaded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  documents:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        title:
+                          type: string
+                        status:
+                          type: string
+
+  /documents:
+    get:
+      summary: List documents
+      tags: [Documents]
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [pending, processing, ready, error]
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            maximum: 100
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: List of documents
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  documents:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Document'
+                  total:
+                    type: integer
+                  has_more:
+                    type: boolean
+
+  /documents/{id}:
+    get:
+      summary: Get document
+      tags: [Documents]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Document details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Document'
+        '404':
+          description: Document not found
+    delete:
+      summary: Delete document
+      tags: [Documents]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Document deleted
+        '404':
+          description: Document not found
+
+  /search:
+    post:
+      summary: Faceted search
+      tags: [Search]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                query:
+                  type: string
+                tags:
+                  type: array
+                  items:
+                    type: string
+                date_from:
+                  type: string
+                  format: date
+                date_to:
+                  type: string
+                  format: date
+                limit:
+                  type: integer
+                  default: 20
+      responses:
+        '200':
+          description: Search results
+
+  /search/semantic:
+    post:
+      summary: Semantic vector search
+      tags: [Search]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                query:
+                  type: string
+                limit:
+                  type: integer
+                  default: 10
+              required:
+                - query
+      responses:
+        '200':
+          description: Semantic search results
+
+  /chat/sessions:
+    post:
+      summary: Create chat session
+      tags: [Chat]
+      responses:
+        '201':
+          description: Session created
+
+  /chat/sessions/{id}/messages:
+    post:
+      summary: Send message (RAG)
+      tags: [Chat]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+              required:
+                - message
+      responses:
+        '200':
+          description: Chat response (may be SSE stream)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    $ref: '#/components/schemas/ChatMessage'
+                  sources:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ChatSource'
+            text/event-stream:
+              schema:
+                type: string
+                description: Server-sent events stream
+
+  /tags:
+    get:
+      summary: List tags
+      tags: [Tags]
+      responses:
+        '200':
+          description: List of tags
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  tags:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Tag'

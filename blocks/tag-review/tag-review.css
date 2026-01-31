@@ -1,0 +1,254 @@
+/* Tag Review Block Styles */
+
+.tag-review .tag-review-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.tag-review .tag-review-header {
+  margin-bottom: 24px;
+}
+
+.tag-review .tag-review-header h3 {
+  margin: 0 0 8px;
+}
+
+.tag-review .tag-review-header p {
+  margin: 0;
+  color: var(--color-text-muted, #666);
+}
+
+/* Document Item */
+.tag-review .tag-review-item {
+  background: white;
+  border: 1px solid var(--color-border, #eee);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+  transition: all 0.3s ease;
+}
+
+.tag-review .tag-review-item.accepted {
+  opacity: 0;
+  transform: translateX(20px);
+}
+
+.tag-review .tag-review-doc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.tag-review .tag-review-doc-title {
+  font-weight: 600;
+  color: var(--color-text, #333);
+}
+
+.tag-review .tag-review-doc-date {
+  font-size: 13px;
+  color: var(--color-text-muted, #666);
+}
+
+/* Tags */
+.tag-review .tag-review-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.tag-review .tag-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: var(--color-primary-light, #e6f0ff);
+  color: var(--color-primary, #0066cc);
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.tag-review .tag-chip.suggested {
+  background: var(--color-warning-light, #fff3cd);
+  color: var(--color-warning-dark, #856404);
+}
+
+.tag-review .tag-chip.user-added {
+  background: var(--color-success-light, #e6f4ea);
+  color: var(--color-success-dark, #155724);
+}
+
+.tag-review .tag-confidence {
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+.tag-review .tag-remove {
+  padding: 0;
+  width: 18px;
+  height: 18px;
+  background: none;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  color: inherit;
+  opacity: 0.6;
+  transition: all 0.2s ease;
+}
+
+.tag-review .tag-remove:hover {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.tag-review .add-tag-btn {
+  padding: 6px 12px;
+  background: none;
+  border: 1px dashed var(--color-border, #ccc);
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--color-text-muted, #666);
+  transition: all 0.2s ease;
+}
+
+.tag-review .add-tag-btn:hover {
+  border-color: var(--color-primary, #0066cc);
+  color: var(--color-primary, #0066cc);
+}
+
+/* Tag Input */
+.tag-review .tag-input-container {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.tag-review .tag-input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid var(--color-border, #ccc);
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.tag-review .tag-input:focus {
+  outline: none;
+  border-color: var(--color-primary, #0066cc);
+}
+
+.tag-review .tag-input-cancel {
+  padding: 8px 12px;
+  background: none;
+  border: 1px solid var(--color-border, #ccc);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* Actions */
+.tag-review .tag-review-doc-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.tag-review .tag-review-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.tag-review .button {
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: var(--color-primary, #0066cc);
+  color: white;
+}
+
+.tag-review .button:hover {
+  background: var(--color-primary-dark, #0052a3);
+}
+
+.tag-review .button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.tag-review .accept-all-btn {
+  background: var(--color-success, #28a745);
+}
+
+.tag-review .accept-all-btn:hover {
+  background: var(--color-success-dark, #218838);
+}
+
+/* Empty State */
+.tag-review .tag-review-empty {
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--color-text-muted, #666);
+}
+
+.tag-review .tag-review-empty svg {
+  margin-bottom: 16px;
+  color: var(--color-success, #28a745);
+}
+
+.tag-review .tag-review-empty h4 {
+  margin: 0 0 8px;
+  color: var(--color-text, #333);
+}
+
+.tag-review .tag-review-empty p {
+  margin: 0;
+}
+
+/* Error State */
+.tag-review .tag-review-error {
+  text-align: center;
+  padding: 48px 24px;
+}
+
+.tag-review .retry-btn {
+  margin-top: 16px;
+}
+
+/* Loading Spinner */
+.tag-review .loading-spinner {
+  width: 32px;
+  height: 32px;
+  margin: 64px auto;
+  border: 3px solid var(--color-border, #eee);
+  border-top-color: var(--color-primary, #0066cc);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Auth Required */
+.tag-review .tag-review-auth-required {
+  text-align: center;
+  padding: 48px 24px;
+  background: var(--color-background-alt, #f9f9f9);
+  border-radius: 12px;
+}
+
+.tag-review .tag-review-auth-required a {
+  color: var(--color-primary, #0066cc);
+  font-weight: 600;
+}

@@ -1,0 +1,25 @@
+.hlx/*
+coverage/*
+logs/*
+node_modules/*
+
+helix-importer-ui
+.DS_Store
+*.bak
+.idea
+
+# Cloudflare Workers
+.wrangler/
+.dev.vars
+workers/dist/
+
+# Environment and secrets
+.env
+.env.local
+.env.*.local
+
+# TypeScript
+*.tsbuildinfo
+
+# Editor
+.vscode/settings.json

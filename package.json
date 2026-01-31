@@ -1,0 +1,35 @@
+{
+  "name": "docvault",
+  "private": true,
+  "version": "1.0.0",
+  "description": "DocVault - Intelligent Document Management Platform",
+  "scripts": {
+    "lint:js": "eslint . --ignore-pattern 'workers/**'",
+    "lint:css": "stylelint \"blocks/**/*.css\" \"styles/*.css\"",
+    "lint": "npm run lint:js && npm run lint:css",
+    "lint:fix": "npm run lint:js -- --fix && npm run lint:css -- --fix",
+    "dev": "aem up",
+    "dev:workers": "wrangler dev",
+    "build:workers": "echo 'Workers build handled by wrangler'",
+    "deploy:workers": "wrangler deploy",
+    "db:migrate": "wrangler d1 execute docvault-db --file=workers/migrations/0001_initial_schema.sql",
+    "db:migrate:local": "wrangler d1 execute docvault-db --local --file=workers/migrations/0001_initial_schema.sql"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/doc-vault.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/eslint-parser": "7.28.6",
+    "@cloudflare/workers-types": "^4.20240117.0",
+    "eslint": "8.57.1",
+    "eslint-config-airbnb-base": "15.0.0",
+    "eslint-plugin-import": "2.32.0",
+    "stylelint": "17.1.0",
+    "stylelint-config-standard": "40.0.0",
+    "typescript": "^5.3.3",
+    "wrangler": "^3.24.0"
+  }
+}

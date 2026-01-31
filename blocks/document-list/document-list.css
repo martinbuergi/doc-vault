@@ -1,0 +1,338 @@
+/* Document List Block Styles */
+
+.document-list .document-list-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.document-list .document-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.document-list .document-list-stats {
+  font-size: 14px;
+  color: var(--color-text-muted, #666);
+}
+
+.document-list .document-list-controls {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.document-list .view-toggle {
+  display: flex;
+  gap: 4px;
+  background: var(--color-background-alt, #f5f5f5);
+  padding: 4px;
+  border-radius: 6px;
+}
+
+.document-list .view-btn {
+  padding: 6px 10px;
+  background: none;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--color-text-muted, #666);
+  transition: all 0.2s ease;
+}
+
+.document-list .view-btn:hover {
+  color: var(--color-text, #333);
+}
+
+.document-list .view-btn.active {
+  background: white;
+  color: var(--color-primary, #0066cc);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Content - Grid View */
+.document-list .document-list-content.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.document-list .document-list-content.grid .document-card {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  background: white;
+  border: 1px solid var(--color-border, #eee);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.document-list .document-list-content.grid .document-card:hover {
+  border-color: var(--color-primary, #0066cc);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.document-list .document-list-content.grid .doc-icon {
+  margin-bottom: 16px;
+  color: var(--color-text-muted, #666);
+}
+
+.document-list .document-list-content.grid .doc-info {
+  flex: 1;
+}
+
+.document-list .document-list-content.grid .doc-actions {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--color-border, #eee);
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Content - List View */
+.document-list .document-list-content.list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: var(--color-border, #eee);
+  border: 1px solid var(--color-border, #eee);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.document-list .document-list-content.list .document-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  background: white;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.document-list .document-list-content.list .document-card:hover {
+  background: var(--color-background-alt, #f9f9f9);
+}
+
+.document-list .document-list-content.list .doc-icon {
+  color: var(--color-text-muted, #666);
+  flex-shrink: 0;
+}
+
+.document-list .document-list-content.list .doc-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.document-list .document-list-content.list .doc-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.document-list .document-list-content.list .doc-title {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.document-list .document-list-content.list .doc-meta {
+  display: flex;
+  gap: 16px;
+}
+
+.document-list .document-list-content.list .doc-tags {
+  display: none;
+}
+
+/* Common Styles */
+.document-list .doc-title {
+  font-weight: 600;
+  color: var(--color-text, #333);
+  margin-bottom: 8px;
+  display: block;
+}
+
+.document-list .doc-meta {
+  display: flex;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--color-text-muted, #666);
+}
+
+.document-list .doc-status {
+  font-weight: 500;
+}
+
+.document-list .doc-status.ready {
+  color: var(--color-success, #28a745);
+}
+
+.document-list .doc-status.processing {
+  color: var(--color-primary, #0066cc);
+}
+
+.document-list .doc-status.pending {
+  color: var(--color-warning-dark, #856404);
+}
+
+.document-list .doc-status.error {
+  color: var(--color-error, #dc3545);
+}
+
+.document-list .doc-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.document-list .doc-tag {
+  font-size: 11px;
+  padding: 2px 8px;
+  background: var(--color-background-alt, #f0f0f0);
+  border-radius: 4px;
+  color: var(--color-text-muted, #666);
+}
+
+.document-list .doc-tag-more {
+  font-size: 11px;
+  color: var(--color-text-muted, #666);
+}
+
+.document-list .action-btn {
+  padding: 6px;
+  background: none;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--color-text-muted, #666);
+  transition: all 0.2s ease;
+}
+
+.document-list .action-btn:hover {
+  background: var(--color-error-light, #ffeaea);
+  color: var(--color-error, #dc3545);
+}
+
+.document-list .document-card.deleting {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Empty State */
+.document-list .document-list-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 64px 24px;
+  color: var(--color-text-muted, #666);
+}
+
+.document-list .document-list-empty svg {
+  margin-bottom: 24px;
+  opacity: 0.5;
+}
+
+.document-list .document-list-empty h3 {
+  margin: 0 0 8px;
+  color: var(--color-text, #333);
+}
+
+.document-list .document-list-empty p {
+  margin: 0 0 24px;
+}
+
+.document-list .document-list-empty .button {
+  display: inline-block;
+  padding: 12px 24px;
+  background: var(--color-primary, #0066cc);
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+/* Error State */
+.document-list .document-list-error {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 48px 24px;
+}
+
+.document-list .retry-btn {
+  padding: 10px 20px;
+  background: var(--color-primary, #0066cc);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* Pagination */
+.document-list .document-list-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: 32px;
+}
+
+.document-list .page-btn {
+  padding: 8px 16px;
+  background: white;
+  border: 1px solid var(--color-border, #ccc);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.document-list .page-btn:hover:not(:disabled) {
+  border-color: var(--color-primary, #0066cc);
+  color: var(--color-primary, #0066cc);
+}
+
+.document-list .page-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.document-list .page-info {
+  font-size: 14px;
+  color: var(--color-text-muted, #666);
+}
+
+/* Loading Spinner */
+.document-list .loading-spinner {
+  width: 32px;
+  height: 32px;
+  margin: 64px auto;
+  border: 3px solid var(--color-border, #eee);
+  border-top-color: var(--color-primary, #0066cc);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Auth Required */
+.document-list .document-list-auth-required {
+  text-align: center;
+  padding: 48px 24px;
+  background: var(--color-background-alt, #f9f9f9);
+  border-radius: 12px;
+}
+
+.document-list .document-list-auth-required a {
+  color: var(--color-primary, #0066cc);
+  font-weight: 600;
+}
