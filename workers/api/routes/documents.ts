@@ -3,6 +3,7 @@
 import type { Env, Document, DocumentUploadResponse, ProcessingQueueMessage } from '../../shared/types';
 import { generateId, jsonResponse, errorResponse, isoNow, sha256 } from '../../shared/utils';
 import { authenticateRequest } from './auth';
+import { processDocument } from '../../shared/processing';
 
 export async function handleDocuments(request: Request, env: Env, path: string): Promise<Response> {
   const user = await authenticateRequest(request, env);
@@ -177,7 +178,7 @@ async function uploadFile(
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?, ?)
   `).bind(docId, workspaceId, userId, file.name, fileKey, contentHash, mimeType, file.size, now, now).run();
   
-  // Queue for processing
+  // Process document - use queue if available (paid plan), otherwise process synchronously
   const message: ProcessingQueueMessage = {
     type: 'document_uploaded',
     document_id: docId,
@@ -187,14 +188,36 @@ async function uploadFile(
     mime_type: mimeType,
   };
   
-  await env.PROCESSING_QUEUE.send(message);
-  
-  return {
-    id: docId,
-    title: file.name,
-    status: 'pending',
-    created_at: now,
-  };
+  if (env.PROCESSING_QUEUE) {
+    // Paid plan: queue for async processing
+    await env.PROCESSING_QUEUE.send(message);
+    return {
+      id: docId,
+      title: file.name,
+      status: 'pending',
+      created_at: now,
+    };
+  } else {
+    // Free tier: process synchronously (may be slower for large files)
+    // Process in background without blocking response
+    try {
+      await processDocument(message, env);
+      return {
+        id: docId,
+        title: file.name,
+        status: 'ready',
+        created_at: now,
+      };
+    } catch (error) {
+      console.error('Sync processing failed:', error);
+      return {
+        id: docId,
+        title: file.name,
+        status: 'error',
+        created_at: now,
+      };
+    }
+  }
 }
 
 function getMimeType(filename: string): string {

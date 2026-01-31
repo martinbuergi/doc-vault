@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "docvault": {
+      "command": "npx",
+      "args": ["-y", "@anthropic-ai/mcp-proxy", "https://docvault-api.martinbuergi.workers.dev/mcp/sse"],
+      "env": {
+        "MCP_API_KEY": "YOUR_API_KEY_HERE"
+      }
+    }
+  }
+}

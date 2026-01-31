@@ -23,7 +23,7 @@ name = "docvault-api-prod"
 [[d1_databases]]
 binding = "DB"
 database_name = "docvault-db"
-database_id = "" # Will be populated after creation
+database_id = "a1a273c8-d79b-4531-a152-82aebe9b431f" # Will be populated after creation
 
 # R2 Bucket binding for file storage
 [[r2_buckets]]
@@ -39,15 +39,16 @@ index_name = "docvault-embeddings"
 [ai]
 binding = "AI"
 
-# Queue for async document processing
-[[queues.producers]]
-queue = "docvault-processing"
-binding = "PROCESSING_QUEUE"
-
-[[queues.consumers]]
-queue = "docvault-processing"
-max_batch_size = 10
-max_batch_timeout = 30
+# Queue for async document processing (requires paid plan)
+# Uncomment these lines if you upgrade to Workers Paid:
+# [[queues.producers]]
+# queue = "docvault-processing"
+# binding = "PROCESSING_QUEUE"
+#
+# [[queues.consumers]]
+# queue = "docvault-processing"
+# max_batch_size = 10
+# max_batch_timeout = 30
 
 # Environment variables (secrets should be set via wrangler secret)
 [vars]

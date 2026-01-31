@@ -9,8 +9,8 @@ export interface Env {
   VECTORS: VectorizeIndex;
   // AI binding for AI Gateway
   AI: Ai;
-  // Queue for async processing
-  PROCESSING_QUEUE: Queue;
+  // Queue for async processing (requires paid plan - optional)
+  PROCESSING_QUEUE?: Queue;
   // Environment variables
   ENVIRONMENT: string;
   API_VERSION: string;

@@ -276,3 +276,269 @@ main .section.highlight {
   margin: 0;
   padding: 40px 0;
 }
+
+/* ==========================================
+   DocVault Page Styles
+   ========================================== */
+
+/* Header */
+header {
+  background-color: var(--color-background);
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+header .header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--nav-height);
+}
+
+header .logo {
+  text-decoration: none;
+}
+
+header .logo h1 {
+  margin: 0;
+  font-size: 24px;
+  color: var(--color-primary);
+}
+
+header nav ul {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 24px;
+}
+
+header nav a {
+  color: var(--color-text);
+  text-decoration: none;
+  font-weight: 500;
+  padding: 8px 0;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+header nav a:hover,
+header nav a.active {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+}
+
+/* Hero Section */
+.hero {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  color: white;
+  padding: 80px 24px;
+  text-align: center;
+  margin: 0 !important;
+}
+
+.hero h1 {
+  font-size: 48px;
+  margin: 0 0 16px;
+  color: white;
+}
+
+.hero p {
+  font-size: 20px;
+  opacity: 0.9;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Page Header */
+.page-header {
+  text-align: center;
+  padding: 40px 24px;
+  background-color: var(--color-background-alt);
+  margin: 0 !important;
+}
+
+.page-header h1 {
+  margin: 0 0 8px;
+  font-size: 36px;
+}
+
+.page-header p {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+/* Section Title */
+.section-title {
+  text-align: center;
+  padding: 40px 24px 20px;
+}
+
+.section-title h2 {
+  margin: 0 0 8px;
+}
+
+.section-title p {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+/* Features Grid */
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto !important;
+  padding: 24px;
+}
+
+.feature-card {
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 32px;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.feature-card:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.feature-card h3 {
+  margin: 0 0 12px;
+  color: var(--color-primary);
+}
+
+.feature-card p {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+/* Settings Cards */
+.account-settings {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto !important;
+  padding: 24px;
+}
+
+.setting-card {
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.setting-card h3 {
+  margin: 0 0 8px;
+}
+
+.setting-card p {
+  margin: 0 0 16px;
+  color: var(--color-text-muted);
+}
+
+.setting-card.danger {
+  border-color: var(--color-error);
+  background-color: var(--color-error-light);
+}
+
+.setting-card.danger h3 {
+  color: var(--color-error);
+}
+
+/* Buttons */
+.btn-primary {
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-dark);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-primary-light);
+}
+
+.btn-danger {
+  background-color: var(--color-error);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+}
+
+/* Footer */
+footer {
+  background-color: var(--color-background-alt);
+  border-top: 1px solid var(--color-border);
+  padding: 24px;
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
+footer p {
+  margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  header .header-content {
+    flex-direction: column;
+    height: auto;
+    padding: 16px 24px;
+    gap: 16px;
+  }
+
+  header nav ul {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .hero {
+    padding: 60px 24px;
+  }
+
+  .hero h1 {
+    font-size: 32px;
+  }
+
+  .hero p {
+    font-size: 18px;
+  }
+}
