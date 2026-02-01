@@ -186,6 +186,114 @@
     
     .loading { opacity: 0.6; pointer-events: none; }
     
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .modal {
+      background: var(--color-card);
+      border-radius: 12px;
+      max-width: 700px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 24px;
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+    }
+    .modal-header h2 { margin: 0; word-break: break-word; }
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--color-muted);
+      padding: 0;
+      line-height: 1;
+    }
+    .modal-close:hover { color: var(--color-text); }
+    
+    .doc-actions {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    
+    .doc-meta {
+      background: var(--color-bg);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+    .doc-meta-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--color-border);
+    }
+    .doc-meta-row:last-child { border-bottom: none; }
+    .doc-meta-label { color: var(--color-muted); }
+    
+    /* Tags */
+    .tags-section { margin-top: 20px; }
+    .tags-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: var(--color-primary);
+      color: white;
+      border-radius: 20px;
+      font-size: 14px;
+    }
+    .tag.ai-suggested {
+      background: #e7f3ff;
+      color: var(--color-primary);
+      border: 1px dashed var(--color-primary);
+    }
+    .tag .remove-tag {
+      background: none;
+      border: none;
+      color: inherit;
+      cursor: pointer;
+      padding: 0;
+      font-size: 16px;
+      line-height: 1;
+      opacity: 0.7;
+    }
+    .tag .remove-tag:hover { opacity: 1; }
+    .add-tag-form {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .add-tag-form input {
+      flex: 1;
+      margin-bottom: 0;
+      padding: 8px 12px;
+    }
+    .add-tag-form button { padding: 8px 16px; }
+    
     footer {
       background: var(--color-card);
       border-top: 1px solid var(--color-border);
@@ -349,6 +457,57 @@
     <p>DocVault - Built with Cloudflare Workers</p>
   </footer>
 
+  <!-- Document Detail Modal -->
+  <div id="docModal" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="modalDocTitle">Document Title</h2>
+        <button class="modal-close" onclick="closeDocModal()">&times;</button>
+      </div>
+      
+      <div class="doc-actions">
+        <button class="btn btn-primary" id="downloadBtn" onclick="downloadDocument()">⬇️ Download</button>
+        <button class="btn btn-secondary" id="viewTextBtn" onclick="viewExtractedText()">📄 View Text</button>
+        <button class="btn btn-danger" id="deleteBtn" onclick="deleteDocument()">🗑️ Delete</button>
+      </div>
+      
+      <div class="doc-meta">
+        <div class="doc-meta-row">
+          <span class="doc-meta-label">Status</span>
+          <span id="modalDocStatus">ready</span>
+        </div>
+        <div class="doc-meta-row">
+          <span class="doc-meta-label">Type</span>
+          <span id="modalDocType">application/pdf</span>
+        </div>
+        <div class="doc-meta-row">
+          <span class="doc-meta-label">Size</span>
+          <span id="modalDocSize">0 KB</span>
+        </div>
+        <div class="doc-meta-row">
+          <span class="doc-meta-label">Uploaded</span>
+          <span id="modalDocDate">-</span>
+        </div>
+      </div>
+      
+      <div class="tags-section">
+        <h3 style="margin-bottom: 12px;">Tags</h3>
+        <div class="tags-container" id="modalDocTags">
+          <!-- Tags will be inserted here -->
+        </div>
+        <div class="add-tag-form">
+          <input type="text" id="newTagInput" placeholder="Add a tag...">
+          <button class="btn btn-primary" onclick="addTag()">Add</button>
+        </div>
+      </div>
+      
+      <div id="extractedTextSection" class="hidden" style="margin-top: 20px;">
+        <h3 style="margin-bottom: 12px;">Extracted Text</h3>
+        <div id="extractedText" style="background: var(--color-bg); padding: 16px; border-radius: 8px; max-height: 300px; overflow-y: auto; white-space: pre-wrap; font-family: monospace; font-size: 14px;"></div>
+      </div>
+    </div>
+  </div>
+
   <script>
     const API_URL = 'https://docvault-api.martin-buergi.workers.dev';
     let token = localStorage.getItem('token');
@@ -426,6 +585,16 @@
       document.getElementById('chatInput').addEventListener('keypress', (e) => {
         if (e.key === 'Enter') sendMessage();
       });
+      
+      // Modal close on outside click
+      document.getElementById('docModal').addEventListener('click', (e) => {
+        if (e.target.id === 'docModal') closeDocModal();
+      });
+      
+      // Add tag on Enter
+      document.getElementById('newTagInput').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') { e.preventDefault(); addTag(); }
+      });
     }
     
     function showPage(page) {
@@ -496,6 +665,8 @@
       updateUI();
     }
     
+    let currentDoc = null;
+    
     async function loadDocuments() {
       try {
         const data = await api('/api/v1/documents');
@@ -507,15 +678,174 @@
         }
         
         grid.innerHTML = data.documents.map(doc => `
-          <div class="doc-card">
+          <div class="doc-card" onclick="openDocModal('${doc.id}')">
             <h3>${escapeHtml(doc.title)}</h3>
             <div class="meta">${formatDate(doc.created_at)}</div>
             <span class="status status-${doc.status}">${doc.status}</span>
+            ${doc.tags && doc.tags.length > 0 ? `<div style="margin-top: 8px;">${doc.tags.slice(0,3).map(t => `<span style="font-size: 12px; background: #e7f3ff; color: var(--color-primary); padding: 2px 8px; border-radius: 10px; margin-right: 4px;">${escapeHtml(typeof t === 'string' ? t : t.name || t)}</span>`).join('')}</div>` : ''}
           </div>
         `).join('');
       } catch (err) {
         console.error('Failed to load documents:', err);
       }
+    }
+    
+    async function openDocModal(docId) {
+      try {
+        const data = await api(`/api/v1/documents/${docId}`);
+        currentDoc = data;
+        
+        document.getElementById('modalDocTitle').textContent = data.title;
+        document.getElementById('modalDocStatus').textContent = data.status;
+        document.getElementById('modalDocType').textContent = data.mime_type;
+        document.getElementById('modalDocSize').textContent = formatBytes(data.file_size_bytes);
+        document.getElementById('modalDocDate').textContent = formatDate(data.created_at);
+        
+        // Render tags
+        renderTags(data.tags || []);
+        
+        // Hide extracted text section initially
+        document.getElementById('extractedTextSection').classList.add('hidden');
+        
+        // Show modal
+        document.getElementById('docModal').classList.remove('hidden');
+      } catch (err) {
+        showAlert('Failed to load document: ' + err.message);
+      }
+    }
+    
+    function closeDocModal() {
+      document.getElementById('docModal').classList.add('hidden');
+      currentDoc = null;
+    }
+    
+    function renderTags(tags) {
+      const container = document.getElementById('modalDocTags');
+      if (!tags || tags.length === 0) {
+        container.innerHTML = '<span style="color: var(--color-muted);">No tags yet</span>';
+        return;
+      }
+      
+      container.innerHTML = tags.map(tag => {
+        const name = typeof tag === 'string' ? tag : tag.name;
+        const source = typeof tag === 'object' ? tag.source : 'user_added';
+        const tagId = typeof tag === 'object' ? tag.id : name;
+        const isAI = source === 'ai_suggested';
+        
+        return `
+          <span class="tag ${isAI ? 'ai-suggested' : ''}">
+            ${escapeHtml(name)}
+            <button class="remove-tag" onclick="removeTag('${tagId}')" title="Remove tag">&times;</button>
+          </span>
+        `;
+      }).join('');
+    }
+    
+    async function downloadDocument() {
+      if (!currentDoc) return;
+      
+      try {
+        const res = await fetch(`${API_URL}/api/v1/documents/${currentDoc.id}/download`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        
+        if (!res.ok) throw new Error('Download failed');
+        
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = currentDoc.title;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      } catch (err) {
+        showAlert('Download failed: ' + err.message);
+      }
+    }
+    
+    async function viewExtractedText() {
+      if (!currentDoc) return;
+      
+      const section = document.getElementById('extractedTextSection');
+      const textDiv = document.getElementById('extractedText');
+      
+      if (!section.classList.contains('hidden')) {
+        section.classList.add('hidden');
+        return;
+      }
+      
+      try {
+        const data = await api(`/api/v1/documents/${currentDoc.id}/text`);
+        textDiv.textContent = data.text || 'No text extracted';
+        section.classList.remove('hidden');
+      } catch (err) {
+        textDiv.textContent = 'Error: ' + err.message;
+        section.classList.remove('hidden');
+      }
+    }
+    
+    async function deleteDocument() {
+      if (!currentDoc) return;
+      if (!confirm('Are you sure you want to delete this document? This cannot be undone.')) return;
+      
+      try {
+        await api(`/api/v1/documents/${currentDoc.id}`, { method: 'DELETE' });
+        closeDocModal();
+        await loadDocuments();
+        showAlert('Document deleted', 'success');
+      } catch (err) {
+        showAlert('Delete failed: ' + err.message);
+      }
+    }
+    
+    async function addTag() {
+      if (!currentDoc) return;
+      
+      const input = document.getElementById('newTagInput');
+      const tagName = input.value.trim();
+      if (!tagName) return;
+      
+      try {
+        await api(`/api/v1/tags`, {
+          method: 'POST',
+          body: JSON.stringify({ 
+            name: tagName,
+            document_id: currentDoc.id
+          })
+        });
+        
+        input.value = '';
+        // Reload document to get updated tags
+        await openDocModal(currentDoc.id);
+        showAlert('Tag added', 'success');
+      } catch (err) {
+        showAlert('Failed to add tag: ' + err.message);
+      }
+    }
+    
+    async function removeTag(tagId) {
+      if (!currentDoc) return;
+      
+      try {
+        await api(`/api/v1/tags/${tagId}?document_id=${currentDoc.id}`, { 
+          method: 'DELETE' 
+        });
+        
+        // Reload document to get updated tags
+        await openDocModal(currentDoc.id);
+      } catch (err) {
+        showAlert('Failed to remove tag: ' + err.message);
+      }
+    }
+    
+    function formatBytes(bytes) {
+      if (!bytes) return '0 B';
+      const k = 1024;
+      const sizes = ['B', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
     }
     
     async function handleFiles(files) {
