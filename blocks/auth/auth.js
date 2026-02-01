@@ -3,7 +3,18 @@
  * Login and registration forms
  */
 
-import { login, register, isAuthenticated, getCurrentUser } from '../../scripts/api.js';
+import {
+  login,
+  register,
+  isAuthenticated,
+  getCurrentUser,
+} from '../../scripts/api.js';
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
 
 export default async function decorate(block) {
   // Check if already authenticated
@@ -149,9 +160,4 @@ export default async function decorate(block) {
     }
   });
 
-  function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-  }
 }

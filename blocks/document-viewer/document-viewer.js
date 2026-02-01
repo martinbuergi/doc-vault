@@ -4,7 +4,11 @@
  */
 
 import {
-  isAuthenticated, getDocument, deleteDocument, apiRequest, getApiBaseUrl, getAuthToken,
+  isAuthenticated,
+  getDocument,
+  deleteDocument,
+  apiRequest,
+  getApiBaseUrl,
 } from '../../scripts/api.js';
 
 export default async function decorate(block) {
@@ -264,7 +268,7 @@ export default async function decorate(block) {
     blockEl.querySelectorAll('.tag-remove').forEach((btn) => {
       btn.addEventListener('click', async (e) => {
         e.stopPropagation();
-        const tagId = btn.dataset.tagId;
+        const { tagId } = btn.dataset;
 
         try {
           await apiRequest(`/api/v1/documents/${doc.id}/tags`, {

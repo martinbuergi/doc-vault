@@ -162,7 +162,7 @@ export default async function decorate(block) {
         });
       });
     } catch (error) {
-      filterTagsContainer.innerHTML = `<p class="error">Failed to load tags</p>`;
+      filterTagsContainer.innerHTML = '<p class="error">Failed to load tags</p>';
     } finally {
       filterTagsContainer.classList.remove('loading');
     }

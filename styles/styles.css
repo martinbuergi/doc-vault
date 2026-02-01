@@ -26,7 +26,7 @@
   --color-text-muted: #666;
   --color-text-light: #999;
   --color-border: #e0e0e0;
-  --color-primary: #0066cc;
+  --color-primary: #06c;
   --color-primary-dark: #0052a3;
   --color-primary-light: #e6f0ff;
   --color-success: #28a745;
@@ -37,7 +37,7 @@
   --color-warning-light: #fff3cd;
   --color-error: #dc3545;
   --color-error-light: #ffeaea;
-  --color-info: #0066cc;
+  --color-info: #06c;
   --color-info-light: #e7f3ff;
 
   /* fonts */
@@ -407,7 +407,7 @@ header nav a.active {
 }
 
 .feature-card:hover {
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 20px rgb(0 0 0 / 10%);
   transform: translateY(-2px);
 }
 
@@ -516,7 +516,7 @@ footer p {
 }
 
 /* Responsive */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   header .header-content {
     flex-direction: column;
     height: auto;

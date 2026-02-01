@@ -17,13 +17,13 @@
 
 .upload .upload-dropzone:hover,
 .upload .upload-dropzone:focus {
-  border-color: var(--color-primary, #0066cc);
+  border-color: var(--color-primary, #06c);
   background: var(--color-background, #fff);
   outline: none;
 }
 
 .upload .upload-dropzone.dragover {
-  border-color: var(--color-primary, #0066cc);
+  border-color: var(--color-primary, #06c);
   background: var(--color-primary-light, #e6f0ff);
   transform: scale(1.02);
 }
@@ -117,7 +117,7 @@
 .upload .upload-item-progress-bar {
   height: 100%;
   width: 0;
-  background: var(--color-primary, #0066cc);
+  background: var(--color-primary, #06c);
   animation: upload-progress 2s ease-in-out infinite;
 }
 
@@ -168,6 +168,6 @@
 }
 
 .upload .upload-auth-required a {
-  color: var(--color-primary, #0066cc);
+  color: var(--color-primary, #06c);
   font-weight: 600;
 }

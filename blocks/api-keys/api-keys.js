@@ -4,8 +4,30 @@
  */
 
 import {
-  isAuthenticated, getApiKeys, createApiKey, revokeApiKey,
+  isAuthenticated,
+  getApiKeys,
+  createApiKey,
+  revokeApiKey,
 } from '../../scripts/api.js';
+
+function formatDate(dateStr) {
+  const date = new Date(dateStr);
+  const now = new Date();
+  const diff = now.getTime() - date.getTime();
+
+  if (diff < 60000) return 'just now';
+  if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`;
+  if (diff < 86400000) return `${Math.floor(diff / 3600000)}h ago`;
+  if (diff < 604800000) return `${Math.floor(diff / 86400000)}d ago`;
+
+  return date.toLocaleDateString();
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
 
 export default async function decorate(block) {
   if (!isAuthenticated()) {
@@ -200,7 +222,7 @@ export default async function decorate(block) {
         keysList.querySelectorAll('.revoke-btn').forEach((btn) => {
           btn.addEventListener('click', async () => {
             const item = btn.closest('.api-key-item');
-            const keyId = item.dataset.keyId;
+            const { keyId } = item.dataset;
             const keyName = item.querySelector('.api-key-name').textContent;
 
             // eslint-disable-next-line no-alert
@@ -255,22 +277,4 @@ export default async function decorate(block) {
     createdModal.hidden = false;
   }
 
-  function formatDate(dateStr) {
-    const date = new Date(dateStr);
-    const now = new Date();
-    const diff = now.getTime() - date.getTime();
-
-    if (diff < 60000) return 'just now';
-    if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`;
-    if (diff < 86400000) return `${Math.floor(diff / 3600000)}h ago`;
-    if (diff < 604800000) return `${Math.floor(diff / 86400000)}d ago`;
-
-    return date.toLocaleDateString();
-  }
-
-  function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-  }
 }

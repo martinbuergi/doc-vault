@@ -60,6 +60,7 @@ export default async function decorate(block) {
       const docsWithPendingTags = [];
 
       for (const doc of result.documents) {
+        // eslint-disable-next-line no-await-in-loop
         const fullDoc = await getDocument(doc.id);
         const pendingTags = (fullDoc.tags || []).filter((t) => t.source === 'ai_suggested');
 
@@ -193,6 +194,7 @@ export default async function decorate(block) {
     actionsEl.querySelector('.accept-all-btn').addEventListener('click', async () => {
       const items = list.querySelectorAll('.tag-review-item');
       for (const item of items) {
+        // eslint-disable-next-line no-await-in-loop
         await acceptTagsForDocument(item);
       }
     });
@@ -230,7 +232,7 @@ export default async function decorate(block) {
   }
 
   async function acceptTagsForDocument(item) {
-    const docId = item.dataset.docId;
+    const { docId } = item.dataset;
     const tagChips = item.querySelectorAll('.tag-chip');
     const tagNames = Array.from(tagChips).map((chip) => chip.dataset.tagName);
 

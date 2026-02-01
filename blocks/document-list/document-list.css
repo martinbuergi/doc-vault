@@ -47,8 +47,8 @@
 
 .document-list .view-btn.active {
   background: white;
-  color: var(--color-primary, #0066cc);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  color: var(--color-primary, #06c);
+  box-shadow: 0 1px 3px rgb(0 0 0 / 10%);
 }
 
 /* Content - Grid View */
@@ -70,8 +70,8 @@
 }
 
 .document-list .document-list-content.grid .document-card:hover {
-  border-color: var(--color-primary, #0066cc);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border-color: var(--color-primary, #06c);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 8%);
 }
 
 .document-list .document-list-content.grid .doc-icon {
@@ -175,7 +175,7 @@
 }
 
 .document-list .doc-status.processing {
-  color: var(--color-primary, #0066cc);
+  color: var(--color-primary, #06c);
 }
 
 .document-list .doc-status.pending {
@@ -251,7 +251,7 @@
 .document-list .document-list-empty .button {
   display: inline-block;
   padding: 12px 24px;
-  background: var(--color-primary, #0066cc);
+  background: var(--color-primary, #06c);
   color: white;
   text-decoration: none;
   border-radius: 6px;
@@ -267,7 +267,7 @@
 
 .document-list .retry-btn {
   padding: 10px 20px;
-  background: var(--color-primary, #0066cc);
+  background: var(--color-primary, #06c);
   color: white;
   border: none;
   border-radius: 6px;
@@ -293,8 +293,8 @@
 }
 
 .document-list .page-btn:hover:not(:disabled) {
-  border-color: var(--color-primary, #0066cc);
-  color: var(--color-primary, #0066cc);
+  border-color: var(--color-primary, #06c);
+  color: var(--color-primary, #06c);
 }
 
 .document-list .page-btn:disabled {
@@ -313,7 +313,7 @@
   height: 32px;
   margin: 64px auto;
   border: 3px solid var(--color-border, #eee);
-  border-top-color: var(--color-primary, #0066cc);
+  border-top-color: var(--color-primary, #06c);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -333,6 +333,6 @@
 }
 
 .document-list .document-list-auth-required a {
-  color: var(--color-primary, #0066cc);
+  color: var(--color-primary, #06c);
   font-weight: 600;
 }

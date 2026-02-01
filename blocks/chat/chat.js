@@ -4,7 +4,9 @@
  */
 
 import {
-  isAuthenticated, createChatSession, sendChatMessage, getChatSession, getApiBaseUrl, getAuthToken,
+  isAuthenticated,
+  createChatSession,
+  sendChatMessage,
 } from '../../scripts/api.js';
 
 export default async function decorate(block) {
@@ -183,9 +185,13 @@ export default async function decorate(block) {
         let buffer = '';
         let sources = [];
 
-        while (true) {
-          const { done, value } = await reader.read();
+        let done = false;
+        while (!done) {
+          // eslint-disable-next-line no-await-in-loop
+          const result = await reader.read();
+          done = result.done;
           if (done) break;
+          const { value } = result;
 
           buffer += decoder.decode(value, { stream: true });
           const lines = buffer.split('\n');
@@ -236,9 +242,9 @@ export default async function decorate(block) {
     }
   }
 
-  function addMessage(role, content, isStreaming = false) {
+  function addMessage(role, content, streaming = false) {
     const messageEl = document.createElement('div');
-    messageEl.className = `chat-message ${role}${isStreaming ? ' streaming' : ''}`;
+    messageEl.className = `chat-message ${role}${streaming ? ' streaming' : ''}`;
     messageEl.innerHTML = `
       <div class="message-avatar">
         ${role === 'user' ? getUserAvatar() : getAssistantAvatar()}

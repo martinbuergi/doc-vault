@@ -111,7 +111,8 @@ export default async function decorate(block) {
 
       // Update progress items
       result.documents.forEach((doc, index) => {
-        const progressItem = progressList.children[progressList.children.length - validFiles.length + index];
+        const itemIndex = progressList.children.length - validFiles.length + index;
+        const progressItem = progressList.children[itemIndex];
         if (progressItem) {
           updateProgressItem(progressItem, doc);
         }

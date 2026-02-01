@@ -40,7 +40,7 @@
   justify-content: center;
   gap: 8px;
   padding: 10px 16px;
-  background: var(--color-primary, #0066cc);
+  background: var(--color-primary, #06c);
   color: white;
   border: none;
   border-radius: 8px;
@@ -120,8 +120,8 @@
 }
 
 .chat .example-prompt:hover {
-  border-color: var(--color-primary, #0066cc);
-  color: var(--color-primary, #0066cc);
+  border-color: var(--color-primary, #06c);
+  color: var(--color-primary, #06c);
 }
 
 /* Messages */
@@ -148,7 +148,7 @@
 }
 
 .chat .chat-message.user .message-avatar {
-  background: var(--color-primary, #0066cc);
+  background: var(--color-primary, #06c);
   color: white;
 }
 
@@ -170,7 +170,7 @@
 }
 
 .chat .chat-message.user .message-content {
-  background: var(--color-primary, #0066cc);
+  background: var(--color-primary, #06c);
   color: white;
   border-bottom-right-radius: 4px;
 }
@@ -217,8 +217,8 @@
 }
 
 .chat .view-sources-btn:hover {
-  border-color: var(--color-primary, #0066cc);
-  color: var(--color-primary, #0066cc);
+  border-color: var(--color-primary, #06c);
+  color: var(--color-primary, #06c);
 }
 
 /* Input Area */
@@ -240,7 +240,7 @@
 
 .chat .chat-input-wrapper:focus-within {
   background: white;
-  border-color: var(--color-primary, #0066cc);
+  border-color: var(--color-primary, #06c);
 }
 
 .chat .chat-input {
@@ -257,7 +257,7 @@
 
 .chat .chat-send-btn {
   padding: 8px;
-  background: var(--color-primary, #0066cc);
+  background: var(--color-primary, #06c);
   color: white;
   border: none;
   border-radius: 8px;
@@ -363,7 +363,7 @@
 }
 
 .chat .chat-auth-required a {
-  color: var(--color-primary, #0066cc);
+  color: var(--color-primary, #06c);
   font-weight: 600;
 }
 
@@ -383,6 +383,6 @@
     top: 0;
     bottom: 0;
     z-index: 10;
-    box-shadow: -4px 0 12px rgba(0, 0, 0, 0.1);
+    box-shadow: -4px 0 12px rgb(0 0 0 / 10%);
   }
 }

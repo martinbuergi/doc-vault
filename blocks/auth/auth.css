@@ -31,7 +31,7 @@
 }
 
 .auth .auth-tab.active {
-  color: var(--color-primary, #0066cc);
+  color: var(--color-primary, #06c);
 }
 
 .auth .auth-tab.active::after {
@@ -41,7 +41,7 @@
   left: 0;
   right: 0;
   height: 2px;
-  background: var(--color-primary, #0066cc);
+  background: var(--color-primary, #06c);
 }
 
 .auth .auth-form {
@@ -76,8 +76,8 @@
 
 .auth .form-group input:focus {
   outline: none;
-  border-color: var(--color-primary, #0066cc);
-  box-shadow: 0 0 0 3px var(--color-primary-light, rgba(0, 102, 204, 0.1));
+  border-color: var(--color-primary, #06c);
+  box-shadow: 0 0 0 3px var(--color-primary-light, rgb(0 102 204 / 10%));
 }
 
 .auth .form-hint {
@@ -112,7 +112,7 @@
 }
 
 .auth .button.primary {
-  background: var(--color-primary, #0066cc);
+  background: var(--color-primary, #06c);
   color: white;
 }
 

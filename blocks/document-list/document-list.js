@@ -4,7 +4,9 @@
  */
 
 import {
-  isAuthenticated, getDocuments, deleteDocument, getDocument,
+  isAuthenticated,
+  getDocuments,
+  deleteDocument,
 } from '../../scripts/api.js';
 
 export default async function decorate(block) {
@@ -114,7 +116,7 @@ export default async function decorate(block) {
         btn.addEventListener('click', async (e) => {
           e.stopPropagation();
           const card = btn.closest('.document-card');
-          const docId = card.dataset.docId;
+          const { docId } = card.dataset;
           const docTitle = card.querySelector('.doc-title').textContent;
 
           // eslint-disable-next-line no-alert

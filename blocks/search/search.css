@@ -22,7 +22,7 @@
 }
 
 .search .search-input-wrapper:focus-within {
-  border-color: var(--color-primary, #0066cc);
+  border-color: var(--color-primary, #06c);
 }
 
 .search .search-icon {
@@ -40,7 +40,7 @@
 
 .search .search-btn {
   padding: 10px 24px;
-  background: var(--color-primary, #0066cc);
+  background: var(--color-primary, #06c);
   color: white;
   border: none;
   border-radius: 8px;
@@ -108,12 +108,12 @@
 }
 
 .search .filter-tag:hover {
-  border-color: var(--color-primary, #0066cc);
+  border-color: var(--color-primary, #06c);
 }
 
 .search .filter-tag.active {
-  background: var(--color-primary, #0066cc);
-  border-color: var(--color-primary, #0066cc);
+  background: var(--color-primary, #06c);
+  border-color: var(--color-primary, #06c);
   color: white;
 }
 
@@ -199,8 +199,8 @@
 }
 
 .search .search-result:hover {
-  border-color: var(--color-primary, #0066cc);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  border-color: var(--color-primary, #06c);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 6%);
 }
 
 .search .result-icon {
@@ -293,7 +293,7 @@
   height: 32px;
   margin: 64px auto;
   border: 3px solid var(--color-border, #eee);
-  border-top-color: var(--color-primary, #0066cc);
+  border-top-color: var(--color-primary, #06c);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -302,7 +302,7 @@
   width: 20px;
   height: 20px;
   border: 2px solid var(--color-border, #eee);
-  border-top-color: var(--color-primary, #0066cc);
+  border-top-color: var(--color-primary, #06c);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -322,7 +322,7 @@
 }
 
 .search .search-auth-required a {
-  color: var(--color-primary, #0066cc);
+  color: var(--color-primary, #06c);
   font-weight: 600;
 }
 
