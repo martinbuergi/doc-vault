@@ -890,11 +890,11 @@
             method: 'POST',
             body: JSON.stringify({ title: 'New Chat' })
           });
-          sessionId = newSession.session.id;
+          sessionId = newSession.id;
         }
         
         // Send message
-        const response = await api(`/api/v1/chat/${sessionId}/messages`, {
+        const response = await api(`/api/v1/chat/sessions/${sessionId}/messages`, {
           method: 'POST',
           body: JSON.stringify({ message })
         });
