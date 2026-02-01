@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DocVault - AI-Powered Document Management</title>
+  <style>
+    :root {
+      --color-primary: #0066cc;
+      --color-primary-dark: #0052a3;
+      --color-success: #28a745;
+      --color-error: #dc3545;
+      --color-bg: #f5f5f5;
+      --color-card: #ffffff;
+      --color-text: #333;
+      --color-muted: #666;
+      --color-border: #e0e0e0;
+    }
+    
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.6;
+    }
+    
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+    
+    header {
+      background: var(--color-card);
+      border-bottom: 1px solid var(--color-border);
+      padding: 16px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    
+    header .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .logo { font-size: 24px; font-weight: 700; color: var(--color-primary); }
+    
+    nav { display: flex; gap: 24px; }
+    nav a {
+      color: var(--color-text);
+      text-decoration: none;
+      padding: 8px 0;
+      border-bottom: 2px solid transparent;
+    }
+    nav a:hover, nav a.active {
+      color: var(--color-primary);
+      border-bottom-color: var(--color-primary);
+    }
+    
+    .user-info { display: flex; align-items: center; gap: 12px; }
+    .user-info span { color: var(--color-muted); }
+    
+    main { padding: 40px 0; min-height: calc(100vh - 140px); }
+    
+    .card {
+      background: var(--color-card);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      margin-bottom: 24px;
+    }
+    
+    h1 { font-size: 28px; margin-bottom: 8px; }
+    h2 { font-size: 20px; margin-bottom: 16px; color: var(--color-primary); }
+    
+    .subtitle { color: var(--color-muted); margin-bottom: 24px; }
+    
+    .btn {
+      display: inline-block;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+    .btn-primary { background: var(--color-primary); color: white; }
+    .btn-primary:hover { background: var(--color-primary-dark); }
+    .btn-secondary { background: transparent; border: 1px solid var(--color-primary); color: var(--color-primary); }
+    .btn-danger { background: var(--color-error); color: white; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      font-size: 16px;
+      margin-bottom: 16px;
+    }
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--color-primary);
+    }
+    
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; margin-bottom: 8px; font-weight: 500; }
+    
+    .tabs { display: flex; gap: 8px; margin-bottom: 24px; }
+    .tab {
+      padding: 12px 24px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      font-size: 16px;
+    }
+    .tab.active { border-bottom-color: var(--color-primary); color: var(--color-primary); }
+    
+    .upload-zone {
+      border: 2px dashed var(--color-border);
+      border-radius: 12px;
+      padding: 48px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .upload-zone:hover, .upload-zone.dragover {
+      border-color: var(--color-primary);
+      background: rgba(0,102,204,0.05);
+    }
+    .upload-zone input { display: none; }
+    
+    .doc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+    
+    .doc-card {
+      background: var(--color-card);
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .doc-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .doc-card h3 { font-size: 16px; margin-bottom: 8px; }
+    .doc-card .meta { font-size: 14px; color: var(--color-muted); }
+    .doc-card .status {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      margin-top: 8px;
+    }
+    .status-ready { background: #e6f4ea; color: var(--color-success); }
+    .status-pending { background: #fff3cd; color: #856404; }
+    .status-error { background: #ffeaea; color: var(--color-error); }
+    
+    .chat-container { display: flex; flex-direction: column; height: 500px; }
+    .chat-messages { flex: 1; overflow-y: auto; padding: 16px; background: var(--color-bg); border-radius: 8px; }
+    .message { margin-bottom: 16px; }
+    .message.user { text-align: right; }
+    .message .bubble {
+      display: inline-block;
+      max-width: 80%;
+      padding: 12px 16px;
+      border-radius: 16px;
+    }
+    .message.user .bubble { background: var(--color-primary); color: white; }
+    .message.assistant .bubble { background: var(--color-card); border: 1px solid var(--color-border); }
+    .chat-input { display: flex; gap: 12px; margin-top: 16px; }
+    .chat-input input { margin-bottom: 0; }
+    
+    .hidden { display: none !important; }
+    
+    .alert {
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+    .alert-error { background: #ffeaea; color: var(--color-error); }
+    .alert-success { background: #e6f4ea; color: var(--color-success); }
+    
+    .loading { opacity: 0.6; pointer-events: none; }
+    
+    footer {
+      background: var(--color-card);
+      border-top: 1px solid var(--color-border);
+      padding: 20px 0;
+      text-align: center;
+      color: var(--color-muted);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="logo">DocVault</div>
+      <nav id="nav">
+        <a href="#" data-page="home" class="active">Home</a>
+        <a href="#" data-page="documents">Documents</a>
+        <a href="#" data-page="chat">Chat</a>
+        <a href="#" data-page="settings">Settings</a>
+      </nav>
+      <div class="user-info" id="userInfo">
+        <span id="userEmail"></span>
+        <button class="btn btn-secondary" id="logoutBtn" onclick="logout()">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Auth Page -->
+    <div id="page-auth" class="page">
+      <div class="card" style="max-width: 400px; margin: 60px auto;">
+        <div class="tabs">
+          <button class="tab active" data-tab="login">Login</button>
+          <button class="tab" data-tab="register">Register</button>
+        </div>
+        
+        <div id="alert"></div>
+        
+        <form id="loginForm" class="tab-content">
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="loginEmail" required>
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="loginPassword" required>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
+        </form>
+        
+        <form id="registerForm" class="tab-content hidden">
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="registerEmail" required>
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="registerPassword" required minlength="8">
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%;">Register</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Home Page -->
+    <div id="page-home" class="page hidden">
+      <div class="card">
+        <h1>Welcome to DocVault</h1>
+        <p class="subtitle">AI-powered document management with semantic search and chat.</p>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px; margin-top: 32px;">
+          <div class="card">
+            <h2>📤 Upload Documents</h2>
+            <p>Drag and drop PDFs, Word docs, images, and more.</p>
+          </div>
+          <div class="card">
+            <h2>🏷️ AI Tagging</h2>
+            <p>Documents are automatically analyzed and tagged.</p>
+          </div>
+          <div class="card">
+            <h2>🔍 Semantic Search</h2>
+            <p>Find documents by meaning, not just keywords.</p>
+          </div>
+          <div class="card">
+            <h2>💬 Chat with Docs</h2>
+            <p>Ask questions about your document library.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Documents Page -->
+    <div id="page-documents" class="page hidden">
+      <div class="card">
+        <h1>Documents</h1>
+        <p class="subtitle">Upload and manage your documents</p>
+        
+        <div class="upload-zone" id="uploadZone">
+          <input type="file" id="fileInput" multiple accept=".pdf,.docx,.xlsx,.txt,.jpg,.jpeg,.png">
+          <p style="font-size: 18px; margin-bottom: 8px;">📁 Drop files here or click to upload</p>
+          <p style="color: var(--color-muted);">PDF, Word, Excel, Text, Images (max 50MB)</p>
+        </div>
+      </div>
+      
+      <div class="card">
+        <h2>Your Documents</h2>
+        <div class="doc-grid" id="docGrid">
+          <p style="color: var(--color-muted);">No documents yet. Upload some files to get started!</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat Page -->
+    <div id="page-chat" class="page hidden">
+      <div class="card">
+        <h1>Chat with Your Documents</h1>
+        <p class="subtitle">Ask questions about your document library</p>
+        
+        <div class="chat-container">
+          <div class="chat-messages" id="chatMessages">
+            <div class="message assistant">
+              <div class="bubble">Hello! I can help you find information in your documents. What would you like to know?</div>
+            </div>
+          </div>
+          <div class="chat-input">
+            <input type="text" id="chatInput" placeholder="Ask a question...">
+            <button class="btn btn-primary" onclick="sendMessage()">Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings Page -->
+    <div id="page-settings" class="page hidden">
+      <div class="card">
+        <h1>Settings</h1>
+        <p class="subtitle">Manage your account and API access</p>
+      </div>
+      
+      <div class="card">
+        <h2>API Keys</h2>
+        <p style="margin-bottom: 16px;">Create API keys for programmatic access and MCP integration.</p>
+        
+        <div class="form-group">
+          <label>Key Name</label>
+          <input type="text" id="apiKeyName" placeholder="My API Key">
+        </div>
+        <button class="btn btn-primary" onclick="createApiKey()">Create API Key</button>
+        
+        <div id="apiKeysList" style="margin-top: 24px;"></div>
+      </div>
+      
+      <div class="card">
+        <h2>MCP Configuration</h2>
+        <p>Add this to your Claude Desktop config to connect DocVault:</p>
+        <pre style="background: var(--color-bg); padding: 16px; border-radius: 8px; overflow-x: auto; margin-top: 12px;" id="mcpConfig"></pre>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>DocVault - Built with Cloudflare Workers</p>
+  </footer>
+
+  <script>
+    const API_URL = 'https://docvault-api.martin-buergi.workers.dev';
+    let token = localStorage.getItem('token');
+    let user = JSON.parse(localStorage.getItem('user') || 'null');
+    
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      updateUI();
+      setupEventListeners();
+    });
+    
+    function updateUI() {
+      const isLoggedIn = !!token;
+      document.getElementById('page-auth').classList.toggle('hidden', isLoggedIn);
+      document.getElementById('userInfo').classList.toggle('hidden', !isLoggedIn);
+      document.querySelectorAll('#nav a').forEach(a => a.classList.toggle('hidden', !isLoggedIn));
+      
+      if (isLoggedIn) {
+        document.getElementById('userEmail').textContent = user?.email || '';
+        showPage('home');
+        loadDocuments();
+        loadApiKeys();
+        updateMcpConfig();
+      }
+    }
+    
+    function setupEventListeners() {
+      // Tabs
+      document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          const tabName = tab.dataset.tab;
+          document.getElementById('loginForm').classList.toggle('hidden', tabName !== 'login');
+          document.getElementById('registerForm').classList.toggle('hidden', tabName !== 'register');
+        });
+      });
+      
+      // Navigation
+      document.querySelectorAll('#nav a').forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          document.querySelectorAll('#nav a').forEach(a => a.classList.remove('active'));
+          link.classList.add('active');
+          showPage(link.dataset.page);
+        });
+      });
+      
+      // Forms
+      document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await login();
+      });
+      
+      document.getElementById('registerForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await register();
+      });
+      
+      // Upload
+      const uploadZone = document.getElementById('uploadZone');
+      const fileInput = document.getElementById('fileInput');
+      
+      uploadZone.addEventListener('click', () => fileInput.click());
+      uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); uploadZone.classList.add('dragover'); });
+      uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+      uploadZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadZone.classList.remove('dragover');
+        handleFiles(e.dataTransfer.files);
+      });
+      fileInput.addEventListener('change', () => handleFiles(fileInput.files));
+      
+      // Chat
+      document.getElementById('chatInput').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') sendMessage();
+      });
+    }
+    
+    function showPage(page) {
+      document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+      document.getElementById(`page-${page}`).classList.remove('hidden');
+    }
+    
+    function showAlert(message, type = 'error') {
+      const alert = document.getElementById('alert');
+      alert.className = `alert alert-${type}`;
+      alert.textContent = message;
+      alert.classList.remove('hidden');
+      setTimeout(() => alert.classList.add('hidden'), 5000);
+    }
+    
+    async function api(endpoint, options = {}) {
+      const headers = { 'Content-Type': 'application/json', ...options.headers };
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+      
+      const res = await fetch(`${API_URL}${endpoint}`, { ...options, headers });
+      const data = await res.json();
+      
+      if (!res.ok) throw new Error(data.error || 'Request failed');
+      return data;
+    }
+    
+    async function login() {
+      try {
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
+        const data = await api('/api/v1/auth/login', {
+          method: 'POST',
+          body: JSON.stringify({ email, password })
+        });
+        token = data.token;
+        user = data.user;
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(user));
+        updateUI();
+      } catch (err) {
+        showAlert(err.message);
+      }
+    }
+    
+    async function register() {
+      try {
+        const email = document.getElementById('registerEmail').value;
+        const password = document.getElementById('registerPassword').value;
+        const data = await api('/api/v1/auth/register', {
+          method: 'POST',
+          body: JSON.stringify({ email, password })
+        });
+        token = data.token;
+        user = data.user;
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(user));
+        updateUI();
+      } catch (err) {
+        showAlert(err.message);
+      }
+    }
+    
+    function logout() {
+      token = null;
+      user = null;
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      updateUI();
+    }
+    
+    async function loadDocuments() {
+      try {
+        const data = await api('/api/v1/documents');
+        const grid = document.getElementById('docGrid');
+        
+        if (!data.documents || data.documents.length === 0) {
+          grid.innerHTML = '<p style="color: var(--color-muted);">No documents yet. Upload some files to get started!</p>';
+          return;
+        }
+        
+        grid.innerHTML = data.documents.map(doc => `
+          <div class="doc-card">
+            <h3>${escapeHtml(doc.title)}</h3>
+            <div class="meta">${formatDate(doc.created_at)}</div>
+            <span class="status status-${doc.status}">${doc.status}</span>
+          </div>
+        `).join('');
+      } catch (err) {
+        console.error('Failed to load documents:', err);
+      }
+    }
+    
+    async function handleFiles(files) {
+      const formData = new FormData();
+      for (const file of files) {
+        formData.append('files', file);
+      }
+      
+      try {
+        const res = await fetch(`${API_URL}/api/v1/documents/upload`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` },
+          body: formData
+        });
+        
+        if (!res.ok) throw new Error('Upload failed');
+        
+        await loadDocuments();
+        showAlert('Files uploaded successfully!', 'success');
+      } catch (err) {
+        showAlert(err.message);
+      }
+    }
+    
+    async function sendMessage() {
+      const input = document.getElementById('chatInput');
+      const message = input.value.trim();
+      if (!message) return;
+      
+      const messages = document.getElementById('chatMessages');
+      messages.innerHTML += `<div class="message user"><div class="bubble">${escapeHtml(message)}</div></div>`;
+      input.value = '';
+      messages.scrollTop = messages.scrollHeight;
+      
+      try {
+        // First, create or get a session
+        const sessions = await api('/api/v1/chat/sessions');
+        let sessionId = sessions.sessions?.[0]?.id;
+        
+        if (!sessionId) {
+          const newSession = await api('/api/v1/chat/sessions', {
+            method: 'POST',
+            body: JSON.stringify({ title: 'New Chat' })
+          });
+          sessionId = newSession.session.id;
+        }
+        
+        // Send message
+        const response = await api(`/api/v1/chat/${sessionId}/messages`, {
+          method: 'POST',
+          body: JSON.stringify({ message })
+        });
+        
+        messages.innerHTML += `<div class="message assistant"><div class="bubble">${escapeHtml(response.message?.content || 'No response')}</div></div>`;
+        messages.scrollTop = messages.scrollHeight;
+      } catch (err) {
+        messages.innerHTML += `<div class="message assistant"><div class="bubble" style="color: var(--color-error);">Error: ${escapeHtml(err.message)}</div></div>`;
+      }
+    }
+    
+    async function loadApiKeys() {
+      try {
+        const data = await api('/api/v1/auth/keys');
+        const list = document.getElementById('apiKeysList');
+        
+        if (!data.keys || data.keys.length === 0) {
+          list.innerHTML = '<p style="color: var(--color-muted);">No API keys yet.</p>';
+          return;
+        }
+        
+        list.innerHTML = data.keys.map(key => `
+          <div style="display: flex; justify-content: space-between; padding: 12px; background: var(--color-bg); border-radius: 8px; margin-bottom: 8px;">
+            <div>
+              <strong>${escapeHtml(key.name)}</strong>
+              <span style="color: var(--color-muted); margin-left: 12px;">${key.prefix}...</span>
+            </div>
+            <button class="btn btn-danger" style="padding: 6px 12px;" onclick="revokeApiKey('${key.id}')">Revoke</button>
+          </div>
+        `).join('');
+      } catch (err) {
+        console.error('Failed to load API keys:', err);
+      }
+    }
+    
+    async function createApiKey() {
+      const name = document.getElementById('apiKeyName').value.trim() || 'API Key';
+      
+      try {
+        const data = await api('/api/v1/auth/keys', {
+          method: 'POST',
+          body: JSON.stringify({ name, role: 'editor' })
+        });
+        
+        alert(`API Key created! Save this key - it won't be shown again:\n\n${data.key}`);
+        document.getElementById('apiKeyName').value = '';
+        loadApiKeys();
+        updateMcpConfig(data.key);
+      } catch (err) {
+        showAlert(err.message);
+      }
+    }
+    
+    async function revokeApiKey(id) {
+      if (!confirm('Are you sure you want to revoke this API key?')) return;
+      
+      try {
+        await api(`/api/v1/auth/keys/${id}`, { method: 'DELETE' });
+        loadApiKeys();
+      } catch (err) {
+        showAlert(err.message);
+      }
+    }
+    
+    function updateMcpConfig(apiKey = 'YOUR_API_KEY_HERE') {
+      const config = {
+        mcpServers: {
+          docvault: {
+            command: "npx",
+            args: ["-y", "@anthropic-ai/mcp-proxy", `${API_URL}/mcp/sse`],
+            env: { MCP_API_KEY: apiKey }
+          }
+        }
+      };
+      document.getElementById('mcpConfig').textContent = JSON.stringify(config, null, 2);
+    }
+    
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+    
+    function formatDate(date) {
+      return new Date(date).toLocaleDateString();
+    }
+  </script>
+</body>
+</html>
