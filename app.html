@@ -468,6 +468,7 @@
       <div class="doc-actions">
         <button class="btn btn-primary" id="downloadBtn" onclick="downloadDocument()">⬇️ Download</button>
         <button class="btn btn-secondary" id="viewTextBtn" onclick="viewExtractedText()">📄 View Text</button>
+        <button class="btn btn-secondary" id="reprocessBtn" onclick="reprocessDocument()">🔄 Reprocess</button>
         <button class="btn btn-danger" id="deleteBtn" onclick="deleteDocument()">🗑️ Delete</button>
       </div>
       
@@ -797,6 +798,25 @@
         showAlert('Document deleted', 'success');
       } catch (err) {
         showAlert('Delete failed: ' + err.message);
+      }
+    }
+    
+    async function reprocessDocument() {
+      if (!currentDoc) return;
+      
+      const btn = document.getElementById('reprocessBtn');
+      btn.disabled = true;
+      btn.textContent = '⏳ Processing...';
+      
+      try {
+        await api(`/api/v1/documents/${currentDoc.id}/reprocess`, { method: 'POST' });
+        await openDocModal(currentDoc.id);
+        showAlert('Document reprocessed! Text extraction and AI tagging updated.', 'success');
+      } catch (err) {
+        showAlert('Reprocess failed: ' + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '🔄 Reprocess';
       }
     }
     

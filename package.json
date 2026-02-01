@@ -31,5 +31,8 @@
     "stylelint-config-standard": "40.0.0",
     "typescript": "^5.3.3",
     "wrangler": "^3.24.0"
+  },
+  "dependencies": {
+    "unpdf": "^1.4.0"
   }
 }

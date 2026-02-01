@@ -53,6 +53,12 @@ export async function handleDocuments(request: Request, env: Env, path: string):
     return handleDelete(request, env, user.id, docId);
   }
   
+  // POST /:id/reprocess - Reprocess document
+  if (path.match(/^\/[^\/]+\/reprocess$/) && method === 'POST') {
+    const docId = path.replace('/reprocess', '').substring(1);
+    return handleReprocess(request, env, user.id, docId);
+  }
+  
   return errorResponse('Not Found', 404, env.CORS_ORIGIN);
 }
 
@@ -450,4 +456,51 @@ async function handleDelete(request: Request, env: Env, userId: string, docId: s
   await env.DB.prepare('DELETE FROM documents WHERE id = ?').bind(docId).run();
   
   return jsonResponse({ message: 'Document deleted' }, 200, env.CORS_ORIGIN);
+}
+
+async function handleReprocess(request: Request, env: Env, userId: string, docId: string): Promise<Response> {
+  // Verify access (editor or owner)
+  const doc = await env.DB.prepare(`
+    SELECT d.id, d.file_key, d.mime_type, d.workspace_id, wm.role
+    FROM documents d
+    JOIN workspace_members wm ON d.workspace_id = wm.workspace_id
+    WHERE d.id = ? AND wm.user_id = ? AND wm.role IN ('owner', 'editor')
+  `).bind(docId, userId).first<{ id: string; file_key: string; mime_type: string; workspace_id: string; role: string }>();
+  
+  if (!doc) {
+    return errorResponse('Document not found or insufficient permissions', 404, env.CORS_ORIGIN);
+  }
+  
+  try {
+    // Delete existing chunks and vectors
+    const chunks = await env.DB.prepare(
+      'SELECT id FROM document_chunks WHERE document_id = ?'
+    ).bind(docId).all<{ id: string }>();
+    
+    if (chunks.results && chunks.results.length > 0) {
+      await env.VECTORS.deleteByIds(chunks.results.map(c => c.id));
+    }
+    
+    await env.DB.prepare('DELETE FROM document_chunks WHERE document_id = ?').bind(docId).run();
+    await env.DB.prepare('DELETE FROM document_tags WHERE document_id = ?').bind(docId).run();
+    
+    // Trigger reprocessing
+    const message: ProcessingQueueMessage = {
+      type: 'document_uploaded',
+      document_id: docId,
+      workspace_id: doc.workspace_id,
+      user_id: userId,
+      file_key: doc.file_key,
+      mime_type: doc.mime_type,
+    };
+    
+    // Process synchronously (for free tier without queues)
+    await processDocument(message, env);
+    
+    return jsonResponse({ message: 'Document reprocessing complete' }, 200, env.CORS_ORIGIN);
+    
+  } catch (error) {
+    console.error('Reprocess error:', error);
+    return errorResponse('Reprocessing failed: ' + (error instanceof Error ? error.message : 'Unknown error'), 500, env.CORS_ORIGIN);
+  }
 }
